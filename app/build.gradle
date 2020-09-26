@@ -1,5 +1,22 @@
 apply plugin: 'com.android.application'
 
+def getLocalProperties() {
+    Properties localProperties = new Properties()
+    File file = project.rootProject.file('local.properties')
+    if (file.exists()) {
+        localProperties.load(file.newReader("UTF-8")) // 解决 gradle properties 中文乱码
+    }
+    return localProperties
+}
+
+def getLocalPropertiesByName(String name) {
+    Properties localProperties = getLocalProperties()
+    if (localProperties != null){
+        return localProperties.getProperty(name)
+    }
+    return null
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -14,9 +31,19 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword getLocalPropertiesByName("RELEASE_KEY_PASSWORD")
+            storeFile file('C:\\Users\\Terence\\.keystore\\labkey.jks')
+            storePassword getLocalPropertiesByName("RELEASE_KEYSTORE_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -25,9 +52,9 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 }

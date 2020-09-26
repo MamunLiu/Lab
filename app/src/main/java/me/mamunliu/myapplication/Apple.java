@@ -5,10 +5,13 @@ import android.view.View.OnClickListener;
 
 import java.util.List;
 
+import androidx.annotation.Keep;
+
 /**
  * Copyright (C) 2020 MamunLiu. All Rights Reserved.
  * Created by MamunLiu on 2020/9/3.
  */
+@Keep
 class Apple  {
     //原生类型
     private String name;
@@ -38,8 +41,6 @@ class Apple  {
     };
 
     private Num enumTypeVal;
-
-    private ATK mATK;
 
     public String getName() {
         return name;
