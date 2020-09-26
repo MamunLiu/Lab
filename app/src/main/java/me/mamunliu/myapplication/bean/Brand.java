@@ -1,4 +1,4 @@
-package me.mamunliu.myapplication;
+package me.mamunliu.myapplication.bean;
 
 /**
  * Copyright (C) 2020 MamunLiu. All Rights Reserved.
@@ -6,6 +6,7 @@ package me.mamunliu.myapplication;
  */
 class Brand {
     private String name;
+
     private String country;
 
     public String getName() {
