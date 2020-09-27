@@ -3,6 +3,7 @@ package me.mamunliu.myapplication.bean;
 import java.util.List;
 
 import androidx.annotation.Keep;
+import me.mamunliu.myapplication.anno.NotReported;
 import me.mamunliu.myapplication.anno.ReportName;
 
 
@@ -17,6 +18,7 @@ public class Apple {
 
     private double price;
 
+    @NotReported
     @ReportName(value = "brand")
     private Brand mBrand;
 
@@ -25,6 +27,10 @@ public class Apple {
     private String[] providerName = {"TigerMarket", "BambooMarket"};
 
     private Color mColor = Color.GREEN;
+
+    private int num = 100;
+
+    private String[][] ok= {{"1","2"},{"a","b"}};
 
 
     public String getName() {

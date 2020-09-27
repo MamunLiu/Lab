@@ -1,9 +1,11 @@
 package me.mamunliu.myapplication.util;
 
-import java.lang.reflect.Array;
+import android.text.TextUtils;
+
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 
+import me.mamunliu.myapplication.anno.NotReported;
 import me.mamunliu.myapplication.anno.ReportName;
 
 /**
@@ -13,15 +15,25 @@ import me.mamunliu.myapplication.anno.ReportName;
 public class Converter {
 
     public static LinkedHashMap<String, String> convertData(Object tarInstance) {
+        return convertData(tarInstance, new ConvertListenerDefImpl());
+    }
+
+    public static LinkedHashMap<String, String> convertData(Object tarInstance, ConvertListener convertListener) {
         if (null == tarInstance) {
             return null;
         }
         LinkedHashMap<String, String> result = new LinkedHashMap<>();
+        if (null != convertListener) {
+            convertListener.onConvertStart(result);
+        }
         Class<?> clz = tarInstance.getClass();
         Field[] fields = clz.getDeclaredFields();
         for (Field field : fields) {
             if (!field.isAccessible()) {
                 field.setAccessible(true);
+            }
+            if (field.isAnnotationPresent(NotReported.class)) {
+                continue;
             }
             Object fieldVal = null;
             try {
@@ -34,33 +46,28 @@ public class Converter {
                 ReportName reportNameVal = field.getAnnotation(ReportName.class);
                 reportName = reportNameVal.value();
             }
-            if (null == reportName) {
+            if (TextUtils.isEmpty(reportName)) {
                 reportName = field.getName();
             }
-            result.put(reportName, processFieldVal(field.getType(), fieldVal));
+            String reportVal;
+            if (null != convertListener) {
+                reportVal = convertListener.onConvertFiled(reportName, field.getType(), fieldVal);
+            } else {
+                reportVal = String.valueOf(fieldVal);
+            }
+            result.put(reportName, reportVal);
+        }
+        if (null != convertListener) {
+            convertListener.onConvertFinish(result);
         }
         return result;
     }
 
-    private static String processFieldVal(Class<?> type, Object fieldVal) {
-        if (null == fieldVal) {
-            return "null";
-        }
-        if (type.isArray()) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append('[');
-            int arrayLength = Array.getLength(fieldVal);
-            for (int i = 0; i < arrayLength; i++) {
-                Object val = Array.get(fieldVal, i);
-                stringBuilder.append(val == null ? "null" : processFieldVal(val.getClass(), val));
-                if ((i + 1) == arrayLength) {
-                    break;
-                }
-                stringBuilder.append(',').append(' ');
-            }
-            stringBuilder.append(']');
-            return stringBuilder.toString();
-        } 
-        return String.valueOf(fieldVal);
+    interface ConvertListener {
+        void onConvertStart(LinkedHashMap<String, String> reportData);
+
+        String onConvertFiled(String reportName, Class<?> type, Object fieldVal);
+
+        void onConvertFinish(LinkedHashMap<String, String> reportData);
     }
 }
