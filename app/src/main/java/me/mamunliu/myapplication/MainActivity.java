@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         stringMap.put("money",new Brand());
         apple.setStringMap(stringMap);
 
-        Logger.logReportData(Converter.convertData(apple));
+        Logger.logReportData(TAG,Converter.convertData(apple));
     }
 
 
