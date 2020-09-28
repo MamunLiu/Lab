@@ -4,7 +4,7 @@ package me.mamunliu.myapplication.bean;
  * Copyright (C) 2020 MamunLiu. All Rights Reserved.
  * Created by MamunLiu on 2020/9/14.
  */
-class Brand {
+public class Brand {
     private String name;
 
     private String country;
@@ -23,5 +23,13 @@ class Brand {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                '}';
     }
 }

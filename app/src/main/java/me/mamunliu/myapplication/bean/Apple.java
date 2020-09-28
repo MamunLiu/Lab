@@ -1,6 +1,8 @@
 package me.mamunliu.myapplication.bean;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import androidx.annotation.Keep;
 import me.mamunliu.myapplication.anno.NotReported;
@@ -31,6 +33,10 @@ public class Apple {
     private int num = 100;
 
     private String[][] ok= {{"1","2"},{"a","b"}};
+
+    private Set<String> mStringSet;
+
+    private Map<String, Brand> mStringMap;
 
 
     public String getName() {
@@ -63,5 +69,21 @@ public class Apple {
 
     public void setDescInfo(List<String> descInfo) {
         this.descInfo = descInfo;
+    }
+
+    public Set<String> getStringSet() {
+        return mStringSet;
+    }
+
+    public void setStringSet(Set<String> stringSet) {
+        mStringSet = stringSet;
+    }
+
+    public Map<String, Brand> getStringMap() {
+        return mStringMap;
+    }
+
+    public void setStringMap(Map<String, Brand> stringMap) {
+        mStringMap = stringMap;
     }
 }
